@@ -1,25 +1,37 @@
 # Troubleshooting
 
-## `--dry-run` is required
+## The page does not open
 
-The flag is an intentional safety acknowledgement. Run `python scripts/generate_digest.py --dry-run`.
+Run `docker compose ps` and `docker compose logs hearthsignal`. Confirm port 8088 is free, or set `HEARTHSIGNAL_PORT` to another host port before starting Compose.
 
-## Python is not found
+## The report still shows example data
 
-Install Python 3.10 or newer, or try the Windows launcher: `py scripts/generate_digest.py --dry-run`.
+The default is intentionally safe demo mode. Start Docker monitoring with:
 
-## A JSON parsing error appears
+```console
+docker compose -f compose.yaml -f compose.docker.yaml up -d
+```
 
-Check commas, quotation marks, and braces in your local config or fixture. JSON does not allow trailing commas or comments.
+## Docker checks show permission denied
 
-## An input references an unknown service
+Use `compose.docker.yaml`, which includes both the socket mount and the user required to access it. Rootless Docker users may need to replace `/var/run/docker.sock` with their actual socket path.
 
-Every `service_id` in the check-results file must match an `id` in the services file.
+## Live mode says no checks are enabled
 
-## A path is rejected
+Set `enabled` to `true` for at least one check in `config.live.json`, then restart with `docker compose restart`.
 
-All config, input, template, and output files must remain within this project directory. Remote URLs are intentionally unsupported.
+## A mounted path is missing
 
-## The HTML report looks stale
+The path in `config.live.json` must match its path inside the container. For example, a host mount `/srv/backups:/mnt/backups:ro` uses `/mnt/backups` in the JSON.
 
-Run the generator again, then refresh the browser. The stable `example-digest.html` does not change; local output is written to `latest-digest.html`.
+## The latest run failed
+
+Open `/api/status` or run `docker compose logs hearthsignal`. Hearthsignal preserves the last successful report while showing the collection error in status metadata.
+
+## The report looks stale
+
+Check `/api/status` for `last_success` and `next_run`. Restarting the container triggers an immediate run. The minimum supported interval is five minutes.
+
+## Reset everything
+
+`docker compose down --volumes` removes the container and its stored reports. The next `docker compose up -d` starts cleanly.

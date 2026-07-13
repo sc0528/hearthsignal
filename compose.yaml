@@ -1,0 +1,29 @@
+services:
+  hearthsignal:
+    image: ghcr.io/sc0528/hearthsignal:latest
+    build:
+      context: .
+    container_name: hearthsignal
+    init: true
+    ports:
+      - "${HEARTHSIGNAL_BIND:-127.0.0.1}:${HEARTHSIGNAL_PORT:-8088}:8080"
+    environment:
+      HEARTHSIGNAL_MODE: "${HEARTHSIGNAL_MODE:-demo}"
+      HEARTHSIGNAL_INTERVAL: "${HEARTHSIGNAL_INTERVAL:-86400}"
+      HEARTHSIGNAL_DISCORD_WEBHOOK: "${HEARTHSIGNAL_DISCORD_WEBHOOK:-}"
+      TZ: "${TZ:-UTC}"
+    volumes:
+      - hearthsignal-data:/app/reports
+      - hearthsignal-state:/app/runtime
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  hearthsignal-data:
+  hearthsignal-state:

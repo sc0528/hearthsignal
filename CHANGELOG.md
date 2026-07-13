@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 — Container appliance
+
+- Made Docker Compose the recommended one-command installation.
+- Added a scheduled browser-accessible report appliance with immediate first run.
+- Added safe demo, zero-config Docker monitoring, and advanced live modes.
+- Added last-good-report retention, health checks, and a status API.
+- Added multi-architecture GHCR publishing for AMD64 and ARM64.
+- Added container build, Compose validation, HTTP, and report smoke tests.
+
 ## 0.2.0 — Looking ahead
 
 - Retains 30 local measurement snapshots and seven daily health scores.

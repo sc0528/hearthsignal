@@ -10,117 +10,103 @@ Hearthsignal tells you what is broken, what changed, why it matters, and what to
 
 [![Hearthsignal daily briefing](assets/hearthsignal-report.png)](reports/example-digest.html)
 
-The daily briefing ranks what needs attention, explains the impact, recommends the next action, and confirms what remains healthy. [Open the complete HTML example](reports/example-digest.html).
+The briefing ranks incidents, explains their impact, recommends the next action, tracks health over time, and forecasts storage pressure. [Open the complete HTML example](reports/example-digest.html).
 
-Hearthsignal includes a ready-to-run example report and an opt-in live collector. Live checks are read-only, disabled until configured, and require an explicit `--live` acknowledgement.
+## Start in one command
 
-## What the report explains
+Docker Compose is the recommended installation. It starts Hearthsignal safely with bundled example data:
 
-- A single health score and seven-day direction
-- Incidents ranked by urgency
-- Why each incident matters and what to do next
-- What changed since the previous run
-- Health by infrastructure category
-- Which monitored systems are healthy
-
-The premium HTML report is responsive, printable, dependency-free, and generated entirely on the user's machine.
-
-## Example
-
-```text
-Hearthsignal — 2026-07-12
-Overall status: ATTENTION
-
-2 items need attention across 6 services.
-Critical: Media Library disk usage is at 94%.
-Warning: Photo Backup last completed 31 hours ago.
+```console
+docker compose up -d
 ```
 
-See the complete [example Markdown report](reports/example-digest.md) or [example HTML report](reports/example-digest.html).
+Open **http://localhost:8088**. Hearthsignal generates immediately, refreshes daily, survives restarts, and preserves its reports and history in Docker volumes. It listens on the local machine only by default.
 
-## Quick start
+Stop it with `docker compose down`. Remove Hearthsignal and its stored reports with `docker compose down --volumes`.
 
-Python 3.10 or newer is recommended. No third-party packages are required.
+## Monitor Docker
 
-```powershell
+When you are ready to inspect the local Docker engine:
+
+```console
+docker compose -f compose.yaml -f compose.docker.yaml up -d
+```
+
+Refresh **http://localhost:8088**. The report now covers container health, CPU, memory, restart counts, and images.
+
+This mode deliberately mounts the Docker socket. Socket access is effectively root access to the Docker host, even with a read-only mount. Use it only on a host you control. Demo mode never mounts the socket and runs without Linux capabilities as an unprivileged user.
+
+## Choose a mode
+
+| Mode | Best for | Setup |
+|---|---|---|
+| `demo` | Seeing the complete product safely | `docker compose up -d` |
+| `docker` | Monitoring containers on this Docker host | Add `compose.docker.yaml` |
+| `live` | Docker, disks, backups, HTTP, and Discord | Copy the advanced config example |
+
+### Advanced live checks
+
+1. Copy `config.live.example.json` to `config.live.json`.
+2. Copy `compose.live.example.yaml` to `compose.override.yaml`.
+3. Enable only the checks you want and edit the read-only host mounts.
+4. Run `docker compose up -d`.
+
+Paths in `config.live.json` must be the paths visible inside the container, such as `/mnt/backups`. Discord webhooks stay in the `HEARTHSIGNAL_DISCORD_WEBHOOK` environment variable and are never stored in reports.
+
+## What you get
+
+- One browser-accessible daily briefing at a stable URL
+- Immediate generation followed by automatic scheduled refreshes
+- A health score and seven-day direction
+- Incidents ranked by urgency, impact, and recommended action
+- Change detection and disk-capacity forecasts
+- Docker health, CPU, memory, restart, and image signals
+- Optional disk, backup freshness, HTTP, and Discord integrations
+- Last-good-report retention when a later collection fails
+- A machine-readable status endpoint at `/api/status`
+- Responsive, printable HTML plus Markdown output
+
+Change the refresh interval with `HEARTHSIGNAL_INTERVAL` in seconds; the minimum is 300. Change the host port with `HEARTHSIGNAL_PORT`. Set `HEARTHSIGNAL_BIND=0.0.0.0` only when you intentionally want the briefing available to other devices on your network. For example:
+
+```console
+HEARTHSIGNAL_PORT=8090 HEARTHSIGNAL_INTERVAL=3600 docker compose up -d
+```
+
+On PowerShell, set the variables first with `$env:HEARTHSIGNAL_PORT = "8090"` and `$env:HEARTHSIGNAL_INTERVAL = "3600"`.
+
+## Operate it
+
+```console
+docker compose logs --follow
+docker compose restart
+docker compose pull
+docker compose up -d
+```
+
+The container exposes `/healthz` for liveness and `/api/status` for the latest generation result. A failed collection does not erase the most recent successful briefing.
+
+## Run without Docker
+
+Python 3.10 or newer is supported and requires no third-party packages:
+
+```console
 python scripts/generate_digest.py --dry-run
 ```
 
-The command reads `config.example.json` and the files in `sample-data/`, then writes:
+For direct live collection, copy `config.live.example.json`, enable selected checks, and run:
 
-- `reports/latest-digest.md`
-- `reports/latest-digest.html`
-
-To preview the generated HTML locally:
-
-```powershell
-Start-Process reports/latest-digest.html
-```
-
-The generator rejects remote URLs and paths outside this project. `--dry-run` explicitly selects bundled example-data mode.
-
-Run the test suite with `python -m unittest discover -s tests -v`.
-
-## Customize the example
-
-1. Copy `config.example.json` to `config.local.json`.
-2. Change the report title, owner label, thresholds, or fixture paths.
-3. Edit copied example fixtures—not private infrastructure data.
-4. Run:
-
-```powershell
-python scripts/generate_digest.py --config config.local.json --dry-run
-```
-
-## Try it on a small Docker home lab
-
-The live collector covers Docker container health and resources, disk capacity, backup freshness, and HTTP availability.
-
-```powershell
-Copy-Item config.live.example.json config.live.json
-notepad config.live.json
+```console
 python scripts/collect_health.py --config config.live.json --live
 ```
 
-Enable only the checks you want in `config.live.json`. The command creates `reports/live-digest.md` and `reports/live-digest.html`. No check is enabled in the example config, no credentials are requested, and the collector does not modify services.
-
-Every problem includes its urgency, a plain-English explanation, and a recommended next step. Later runs also identify status changes since the previous run.
-
-## Repository layout
-
-```text
-sample-data/   Bundled example inventory, results, and history
-scripts/       Dependency-free local report generator
-templates/     HTML template used by the generator
-reports/       Static example and locally generated output
-docs/          Setup, security, branding, and troubleshooting guides
-```
-
-## Supported today
-
-Hearthsignal supports an offline example workflow plus opt-in Docker, disk, backup-file, and HTTP checks; configurable thresholds; change tracking; actionable recommendations; and Markdown/HTML output.
-
-### Looking ahead
-
-- Local 30-run measurement history and seven-day health-score trend
-- Disk-capacity forecasts based on observed growth
-- Docker CPU, memory, restart-count, image, and health signals
-- Optional Discord delivery using an environment-provided webhook
-- Guided initialization and readiness checks with the setup doctor
-
-```powershell
-python scripts/setup_hearthsignal.py --init
-python scripts/collect_health.py --live --no-delivery
-```
-
-Planned integrations include Kubernetes and Proxmox APIs, Uptime Kuma/Gatus import, email and Slack delivery, automatic scheduling, and installation packaging. Privileged operations are outside Hearthsignal's security model.
-
 ## Documentation
 
-- [Setup](docs/setup.md)
-- [Security and sanitization](docs/security.md)
-- [Brand system](docs/brand.md)
+- [Installation and configuration](docs/setup.md)
+- [Security model](docs/security.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [Brand system](docs/brand.md)
+
+Run the test suite with `python -m unittest discover -s tests -v`.
 
 ## License
 

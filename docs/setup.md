@@ -1,57 +1,73 @@
-# Setup
+# Installation and configuration
 
-## Requirements
+## Recommended installation
 
-- Python 3.10 or newer
-- A terminal (PowerShell, Command Prompt, Bash, or zsh)
-- No third-party Python packages
+Requirements: Docker Engine or Docker Desktop with Docker Compose.
 
-## Generate the sample digest
+```console
+docker compose up -d
+```
 
-From the project root:
+Open http://localhost:8088. The default is a complete, offline demonstration using bundled fictional data. It makes no network calls and requires no host access.
+
+## Enable Docker monitoring
+
+```console
+docker compose -f compose.yaml -f compose.docker.yaml up -d
+```
+
+The override changes the mode to `docker` and grants access to the local Docker socket. No JSON configuration is required. Remove the override from the command to return to demo mode.
+
+## Enable custom live checks
+
+```console
+cp config.live.example.json config.live.json
+cp compose.live.example.yaml compose.override.yaml
+```
+
+PowerShell equivalents:
 
 ```powershell
+Copy-Item config.live.example.json config.live.json
+Copy-Item compose.live.example.yaml compose.override.yaml
+```
+
+Edit both private files:
+
+- Enable selected checks in `config.live.json`.
+- Add only the required read-only host mounts to `compose.override.yaml`.
+- Use container paths in the JSON, such as `/mnt/backups`.
+- Uncomment the socket mount and `user: "0:0"` only when Docker checks are enabled.
+
+Then run `docker compose up -d`. Both private files are ignored by Git.
+
+## Runtime settings
+
+| Variable | Default | Purpose |
+|---|---:|---|
+| `HEARTHSIGNAL_MODE` | `demo` | `demo`, `docker`, or `live` |
+| `HEARTHSIGNAL_INTERVAL` | `86400` | Seconds between runs; minimum 300 |
+| `HEARTHSIGNAL_PORT` | `8088` | Browser port on the host |
+| `HEARTHSIGNAL_BIND` | `127.0.0.1` | Host interface; use `0.0.0.0` for LAN access |
+| `TZ` | `UTC` | Container timezone |
+| `HEARTHSIGNAL_CONFIG` | `/config/hearthsignal.json` | Live configuration path |
+| `HEARTHSIGNAL_DISCORD_WEBHOOK` | unset | Optional Discord webhook |
+
+## Updating
+
+```console
+docker compose pull
+docker compose up -d
+```
+
+Reports and history are kept in the `hearthsignal-data` and `hearthsignal-state` Docker volumes during updates.
+
+## Direct Python installation
+
+Python 3.10 or newer is supported without third-party packages.
+
+```console
 python scripts/generate_digest.py --dry-run
-```
-
-Hearthsignal reads the bundled example fixtures and creates `reports/latest-digest.md` and `reports/latest-digest.html`.
-
-## Use a separate local config
-
-```powershell
-Copy-Item config.example.json config.local.json
-python scripts/generate_digest.py --config config.local.json --dry-run
-```
-
-`config.local.json` is ignored by Git. Keep input and output paths relative to this project; paths outside the project and URLs are rejected.
-
-## Enable live checks
-
-Create a private configuration and inspect integration readiness:
-
-```powershell
 python scripts/setup_hearthsignal.py --init
-```
-
-Copy `config.live.example.json` to `config.live.json`, enable selected entries, replace placeholder paths/URLs, then run:
-
-```powershell
 python scripts/collect_health.py --config config.live.json --live
 ```
-
-Docker checks require the Docker CLI to be installed and accessible. Disk and backup paths may point to local or mounted storage. HTTP checks use an unauthenticated HEAD request and a configurable timeout.
-
-## Discord delivery
-
-Enable `delivery.discord` in `config.live.json`, then set the webhook in the environment rather than storing it in the file:
-
-```powershell
-$env:HEARTHSIGNAL_DISCORD_WEBHOOK = "your webhook URL"
-python scripts/collect_health.py --live
-```
-
-Use `--no-delivery` to generate reports without sending a notification.
-
-## Reset generated output
-
-Delete `reports/latest-digest.md` and `reports/latest-digest.html`. The checked-in `example-digest` files remain as stable product samples.
