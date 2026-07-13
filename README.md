@@ -6,6 +6,12 @@ A privacy-first daily operations briefing for people running a home lab.
 
 Hearthsignal tells you what is broken, what changed, why it matters, and what to do next—before you open six dashboards.
 
+## See the briefing
+
+[![Hearthsignal daily briefing](assets/hearthsignal-report.png)](reports/example-digest.html)
+
+The daily briefing ranks what needs attention, explains the impact, recommends the next action, and confirms what remains healthy. [Open the complete HTML example](reports/example-digest.html).
+
 Hearthsignal includes a ready-to-run example report and an opt-in live collector. Live checks are read-only, disabled until configured, and require an explicit `--live` acknowledgement.
 
 ## What the report explains

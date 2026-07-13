@@ -139,7 +139,9 @@ def render_html(config: dict[str, Any], services: dict[str, dict[str, Any]], che
     for i, item in enumerate(points):
         x = 25 + (i * 550 / max(1, len(points)-1)); y = 120 - float(item["score"])
         coords.append(f"{x:.1f},{y:.1f}"); labels.append(f'<text class="trend-label" x="{x:.1f}" y="145" text-anchor="middle">{esc(item["label"])}</text><circle class="trend-dot" cx="{x:.1f}" cy="{y:.1f}" r="4"><title>{item["score"]}/100</title></circle>')
-    trend = f'<div class="section trend"><h2>Health trend (7 days)</h2><svg viewBox="0 0 600 155" role="img" aria-label="Health score trend"><line class="trend-grid" x1="20" y1="30" x2="580" y2="30"/><line class="trend-grid" x1="20" y1="70" x2="580" y2="70"/><line class="trend-grid" x1="20" y1="110" x2="580" y2="110"/><polyline class="trend-line" points="{' '.join(coords)}"/>{''.join(labels)}</svg></div>'
+    joined_coords = " ".join(coords)
+    joined_labels = "".join(labels)
+    trend = f'<div class="section trend"><h2>Health trend (7 days)</h2><svg viewBox="0 0 600 155" role="img" aria-label="Health score trend"><line class="trend-grid" x1="20" y1="30" x2="580" y2="30"/><line class="trend-grid" x1="20" y1="70" x2="580" y2="70"/><line class="trend-grid" x1="20" y1="110" x2="580" y2="110"/><polyline class="trend-line" points="{joined_coords}"/>{joined_labels}</svg></div>'
     changes = config.get("changes", [])
     changes_html = "".join(f'<div class="timeline-item"><time>{"Today" if i==0 else "Earlier"}</time><i></i><p>{esc(item)}</p></div>' for i,item in enumerate(changes)) or '<div class="timeline-item"><time>Latest</time><i></i><p>No status changes detected.</p></div>'
     grouped = defaultdict(list)
