@@ -1,0 +1,11 @@
+{
+  "report": {"title": "Hearthsignal", "owner_label": "My Home Lab", "timezone_label": "Local time"},
+  "outputs": {"markdown": "reports/live-digest.md", "html": "reports/live-digest.html"},
+  "thresholds": {"disk_warning_percent": 85, "disk_critical_percent": 92, "backup_warning_hours": 24, "backup_critical_hours": 48},
+  "checks": {
+    "docker": {"enabled": false},
+    "disks": [{"enabled": false, "name": "Main storage", "path": "C:\\path\\to\\storage"}],
+    "backups": [{"enabled": false, "name": "Nightly backup", "path": "C:\\path\\to\\backups", "pattern": "*.zip"}],
+    "http": [{"enabled": false, "name": "Media service", "url": "http://example.invalid/health", "timeout_seconds": 5}]
+  }
+}

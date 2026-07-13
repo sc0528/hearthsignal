@@ -1,0 +1,27 @@
+{
+  "report": {
+    "title": "Hearthsignal",
+    "owner_label": "Example Lab",
+    "timezone_label": "Local time"
+  },
+  "inputs": {
+    "services": "sample-data/services.json",
+    "checks": "sample-data/check-results.json",
+    "history": "sample-data/history.json"
+  },
+  "outputs": {
+    "markdown": "reports/latest-digest.md",
+    "html": "reports/latest-digest.html"
+  },
+  "thresholds": {
+    "disk_warning_percent": 85,
+    "disk_critical_percent": 92,
+    "backup_warning_hours": 24,
+    "backup_critical_hours": 48
+  },
+  "changes": [
+    "Media Library storage crossed the critical threshold.",
+    "Photo Backup moved from healthy to warning.",
+    "All other monitored services remained stable."
+  ]
+}

@@ -1,0 +1,8 @@
+[
+  {"id": "gateway", "name": "Lab Gateway", "category": "network", "platform": "Appliance", "importance": "critical"},
+  {"id": "media", "name": "Media Library", "category": "media", "platform": "Container", "importance": "normal"},
+  {"id": "photos", "name": "Photo Backup", "category": "backup", "platform": "Container", "importance": "high"},
+  {"id": "automation", "name": "Home Automation", "category": "automation", "platform": "Virtual machine", "importance": "high"},
+  {"id": "git", "name": "Code Forge", "category": "development", "platform": "Container", "importance": "normal"},
+  {"id": "metrics", "name": "Metrics Dashboard", "category": "monitoring", "platform": "Container", "importance": "normal"}
+]
