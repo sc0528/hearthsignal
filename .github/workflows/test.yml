@@ -18,3 +18,56 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: python -m unittest discover -s tests -v
       - run: python scripts/generate_digest.py --dry-run
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate Compose files
+        run: |
+          docker compose -f compose.yaml config --quiet
+          docker compose -f compose.yaml -f compose.docker.yaml config --quiet
+      - name: Build image
+        run: |
+          docker build --check .
+          docker build --tag hearthsignal:test .
+          test "$(docker image inspect hearthsignal:test --format '{{.Config.User}}')" = "hearthsignal"
+      - name: Verify one-shot generation
+        run: docker run --rm --read-only -e HEARTHSIGNAL_RUN_ONCE=true hearthsignal:test
+      - name: Verify live Docker collection
+        run: |
+          docker run --detach --name hearthsignal-fixture alpine:3.22 sleep 60
+          mkdir -p "$RUNNER_TEMP/hearthsignal-live"
+          docker run --rm --user 0:0 \
+            --env HEARTHSIGNAL_MODE=docker \
+            --env HEARTHSIGNAL_RUN_ONCE=true \
+            --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+            --volume "$RUNNER_TEMP/hearthsignal-live:/app/reports" \
+            hearthsignal:test
+          grep -q '<title>Hearthsignal</title>' "$RUNNER_TEMP/hearthsignal-live/latest-digest.html"
+          grep -q 'hearthsignal-fixture' "$RUNNER_TEMP/hearthsignal-live/latest-digest.html"
+          docker rm --force hearthsignal-fixture
+      - name: Start appliance
+        run: docker run --detach --name hearthsignal-test --publish 8088:8080 hearthsignal:test
+      - name: Wait for health
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8088/healthz >/tmp/status.json; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:8088/healthz | tee /tmp/status.json
+          grep -q '"state": "ready"' /tmp/status.json
+      - name: Verify browser report and status API
+        run: |
+          curl --fail --silent --location http://127.0.0.1:8088/ | tee /tmp/report.html
+          grep -q '<title>Hearthsignal</title>' /tmp/report.html
+          grep -q 'Prioritized incidents' /tmp/report.html
+          curl --fail --silent --head http://127.0.0.1:8088/latest-digest.html | grep -qi 'X-Content-Type-Options: nosniff'
+          curl --fail --silent http://127.0.0.1:8088/api/status | grep -q '"mode": "demo"'
+      - name: Capture logs on failure
+        if: failure()
+        run: docker logs hearthsignal-test
+      - name: Stop appliance
+        if: always()
+        run: docker rm --force hearthsignal-test || true

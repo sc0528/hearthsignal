@@ -1,0 +1,17 @@
+# Copy this file to compose.override.yaml, then edit the paths below.
+# Docker Compose loads compose.override.yaml automatically.
+services:
+  hearthsignal:
+    environment:
+      HEARTHSIGNAL_MODE: live
+      HEARTHSIGNAL_CONFIG: /config/hearthsignal.json
+    volumes:
+      - ./config.live.json:/config/hearthsignal.json:ro
+      # Mount only the host paths enabled in config.live.json.
+      # - /srv/backups:/mnt/backups:ro
+      # - /srv/media:/mnt/media:ro
+      # Enable only when Docker checks are selected. Socket access is
+      # root-equivalent even when the mount is read-only.
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    # Uncomment together with the Docker socket mount above.
+    # user: "0:0"

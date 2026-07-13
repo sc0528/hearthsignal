@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 config.local.json
 config.live.json
+compose.override.yaml
 reports/latest-digest.*
 reports/live-digest.*
 runtime/
