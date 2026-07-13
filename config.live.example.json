@@ -1,11 +1,12 @@
 {
   "report": {"title": "Hearthsignal", "owner_label": "My Home Lab", "timezone_label": "Local time"},
   "outputs": {"markdown": "reports/live-digest.md", "html": "reports/live-digest.html"},
-  "thresholds": {"disk_warning_percent": 85, "disk_critical_percent": 92, "backup_warning_hours": 24, "backup_critical_hours": 48},
+  "thresholds": {"disk_warning_percent": 85, "disk_critical_percent": 92, "backup_warning_hours": 24, "backup_critical_hours": 48, "container_cpu_warning_percent": 75, "container_cpu_critical_percent": 90, "container_memory_warning_percent": 80, "container_memory_critical_percent": 92, "container_restart_warning": 3, "container_restart_critical": 10},
   "checks": {
     "docker": {"enabled": false},
     "disks": [{"enabled": false, "name": "Main storage", "path": "C:\\path\\to\\storage"}],
     "backups": [{"enabled": false, "name": "Nightly backup", "path": "C:\\path\\to\\backups", "pattern": "*.zip"}],
     "http": [{"enabled": false, "name": "Media service", "url": "http://example.invalid/health", "timeout_seconds": 5}]
-  }
+  },
+  "delivery": {"discord": {"enabled": false, "webhook_env": "HEARTHSIGNAL_DISCORD_WEBHOOK"}}
 }

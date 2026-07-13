@@ -9,6 +9,9 @@ Hearthsignal provides an offline example-data workflow and an explicitly enabled
 - Requires an explicit `--dry-run` flag.
 - Fixture mode uses no network calls or subprocesses.
 - Live mode runs `docker ps` only when Docker is enabled, reads disk/file metadata, and sends HEAD requests only to configured URLs.
+- Docker insights also use read-only `docker stats` and `docker inspect` calls.
+- Measurement history remains in the ignored local `runtime/` directory.
+- Discord webhook URLs are read from an environment variable and are never written to generated reports.
 - Ships only purpose-built example names, timestamps, results, and platform descriptions.
 - Escapes fixture content before inserting it into HTML.
 

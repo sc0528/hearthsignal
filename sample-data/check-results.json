@@ -2,7 +2,7 @@
   "generated_at": "2026-07-12T08:00:00-04:00",
   "checks": [
     {"service_id": "gateway", "type": "availability", "status": "ok", "summary": "Responding normally", "value": true},
-    {"service_id": "media", "type": "disk_usage", "status": "auto", "summary": "Media volume usage", "value": 94, "unit": "%", "impact": "Storage is nearing capacity. New writes may fail and interrupt the media service."},
+    {"service_id": "media", "type": "disk_usage", "status": "auto", "summary": "Media volume usage", "value": 94, "unit": "%", "impact": "Storage is nearing capacity. New writes may fail and interrupt the media service.", "forecast": "At the recent growth rate, this volume may be full within 12 days."},
     {"service_id": "photos", "type": "backup_freshness", "status": "auto", "summary": "Time since last successful backup", "value": 31, "unit": "hours", "impact": "The backup is behind schedule, so recent photo changes may not be protected."},
     {"service_id": "automation", "type": "availability", "status": "ok", "summary": "Responding normally", "value": true},
     {"service_id": "git", "type": "availability", "status": "ok", "summary": "Responding normally", "value": true},

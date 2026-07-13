@@ -65,7 +65,7 @@ Run the test suite with `python -m unittest discover -s tests -v`.
 
 1. Copy `config.example.json` to `config.local.json`.
 2. Change the report title, owner label, thresholds, or fixture paths.
-3. Edit copied fake fixtures—not private infrastructure data.
+3. Edit copied example fixtures—not private infrastructure data.
 4. Run:
 
 ```powershell
@@ -74,7 +74,7 @@ python scripts/generate_digest.py --config config.local.json --dry-run
 
 ## Try it on a small Docker home lab
 
-The first live MVP is intentionally narrow: Docker container health, disk capacity, backup freshness, and HTTP availability.
+The live collector covers Docker container health and resources, disk capacity, backup freshness, and HTTP availability.
 
 ```powershell
 Copy-Item config.live.example.json config.live.json
@@ -100,7 +100,20 @@ docs/          Setup, security, branding, and troubleshooting guides
 
 Hearthsignal supports an offline example workflow plus opt-in Docker, disk, backup-file, and HTTP checks; configurable thresholds; change tracking; actionable recommendations; and Markdown/HTML output.
 
-Planned integrations include Kubernetes and Proxmox APIs, Uptime Kuma/Gatus import, email/chat delivery, automatic scheduling, and installation packaging. Privileged operations are outside Hearthsignal's security model.
+### Looking ahead
+
+- Local 30-run measurement history and seven-day health-score trend
+- Disk-capacity forecasts based on observed growth
+- Docker CPU, memory, restart-count, image, and health signals
+- Optional Discord delivery using an environment-provided webhook
+- Guided initialization and readiness checks with the setup doctor
+
+```powershell
+python scripts/setup_hearthsignal.py --init
+python scripts/collect_health.py --live --no-delivery
+```
+
+Planned integrations include Kubernetes and Proxmox APIs, Uptime Kuma/Gatus import, email and Slack delivery, automatic scheduling, and installation packaging. Privileged operations are outside Hearthsignal's security model.
 
 ## Documentation
 

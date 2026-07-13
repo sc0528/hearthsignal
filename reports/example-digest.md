@@ -26,6 +26,10 @@
 - Photo Backup moved from healthy to warning.
 - All other monitored services remained stable.
 
+## Looking ahead
+
+- **Media Library:** At the recent growth rate, this volume may be full within 12 days.
+
 ---
 Generated: 2026-07-12T08:00:00-04:00 (Local time) · Example Lab
 

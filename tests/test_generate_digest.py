@@ -13,12 +13,19 @@ class DigestTests(unittest.TestCase):
         "disk_critical_percent": 92,
         "backup_warning_hours": 24,
         "backup_critical_hours": 48,
+        "container_cpu_warning_percent": 75,
+        "container_cpu_critical_percent": 90,
+        "container_memory_warning_percent": 80,
+        "container_memory_critical_percent": 92,
+        "container_restart_warning": 3,
+        "container_restart_critical": 10,
     }
 
     def test_threshold_classification(self):
         self.assertEqual(digest.classify({"type": "disk_usage", "status": "auto", "value": 94}, self.thresholds), "critical")
         self.assertEqual(digest.classify({"type": "backup_freshness", "status": "auto", "value": 31}, self.thresholds), "warning")
         self.assertEqual(digest.classify({"type": "disk_usage", "status": "auto", "value": 62}, self.thresholds), "ok")
+        self.assertEqual(digest.classify({"type": "container_memory", "status": "auto", "value": 93}, self.thresholds), "critical")
 
     def test_value_units_are_readable(self):
         self.assertEqual(digest.display_value({"value": 31, "unit": "hours"}), "31 hours")
@@ -38,7 +45,7 @@ class DigestTests(unittest.TestCase):
         config = {"report": {"title": "Digest", "owner_label": "<Owner>", "timezone_label": "Local"}}
         services = {"example": {"name": "<script>"}}
         checks = [{"service_id": "example", "type": "availability", "status": "ok", "resolved_status": "ok", "summary": "<script>", "value": True}]
-        template = "{{PAGE_TITLE}}{{HEADER}}{{OVERVIEW}}{{TREND}}{{INCIDENTS}}{{CHANGES}}{{CATEGORIES}}{{HEALTHY}}{{SOURCE_NOTE}}"
+        template = "{{PAGE_TITLE}}{{HEADER}}{{OVERVIEW}}{{TREND}}{{INCIDENTS}}{{FORECASTS}}{{CHANGES}}{{CATEGORIES}}{{HEALTHY}}{{SOURCE_NOTE}}"
         result = digest.render_html(config, services, checks, "now", template)
         self.assertNotIn("<script>", result)
         self.assertIn("&lt;script&gt;", result)

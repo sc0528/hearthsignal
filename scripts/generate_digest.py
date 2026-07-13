@@ -49,6 +49,16 @@ def classify(check: dict[str, Any], thresholds: dict[str, Any]) -> str:
         if value >= thresholds["backup_warning_hours"]:
             return "warning"
         return "ok"
+    threshold_pairs = {
+        "container_cpu": ("container_cpu_warning_percent", "container_cpu_critical_percent"),
+        "container_memory": ("container_memory_warning_percent", "container_memory_critical_percent"),
+        "container_restarts": ("container_restart_warning", "container_restart_critical"),
+    }
+    if check.get("type") in threshold_pairs:
+        warning_key, critical_key = threshold_pairs[check["type"]]
+        if value >= thresholds[critical_key]: return "critical"
+        if value >= thresholds[warning_key]: return "warning"
+        return "ok"
     raise ValueError(f"check type {check.get('type')!r} requires an explicit status")
 
 
@@ -116,6 +126,9 @@ def render_markdown(config: dict[str, Any], services: dict[str, dict[str, Any]],
     changes = config.get("changes", [])
     lines.extend(["", "## Changes since the previous run", ""])
     lines.extend(f"- {item}" for item in changes) if changes else lines.append("- No status changes detected.")
+    forecasts = [c for c in checks if c.get("forecast")]
+    lines.extend(["", "## Looking ahead", ""])
+    lines.extend(f"- **{services[c['service_id']]['name']}:** {c['forecast']}" for c in forecasts) if forecasts else lines.append("- No near-term capacity risks detected.")
     source_note = config.get("source_note", "Generated locally from bundled example data. Live systems were not contacted.")
     lines.extend(["", "---", f"Generated: {generated_at} ({config['report']['timezone_label']}) · {config['report']['owner_label']}", "", f"_{source_note}_", ""])
     return "\n".join(lines)
@@ -144,6 +157,8 @@ def render_html(config: dict[str, Any], services: dict[str, dict[str, Any]], che
     trend = f'<div class="section trend"><h2>Health trend (7 days)</h2><svg viewBox="0 0 600 155" role="img" aria-label="Health score trend"><line class="trend-grid" x1="20" y1="30" x2="580" y2="30"/><line class="trend-grid" x1="20" y1="70" x2="580" y2="70"/><line class="trend-grid" x1="20" y1="110" x2="580" y2="110"/><polyline class="trend-line" points="{joined_coords}"/>{joined_labels}</svg></div>'
     changes = config.get("changes", [])
     changes_html = "".join(f'<div class="timeline-item"><time>{"Today" if i==0 else "Earlier"}</time><i></i><p>{esc(item)}</p></div>' for i,item in enumerate(changes)) or '<div class="timeline-item"><time>Latest</time><i></i><p>No status changes detected.</p></div>'
+    forecast_checks = [c for c in checks if c.get("forecast")]
+    forecasts_html = "".join(f'<div class="forecast-item"><strong>{esc(services[c["service_id"]]["name"])}</strong><span>{esc(c["forecast"])}</span></div>' for c in forecast_checks) or '<p class="muted">No near-term capacity risks detected.</p>'
     grouped = defaultdict(list)
     for c in checks: grouped[services[c["service_id"]].get("category", "other")].append(c)
     category_html = ""
@@ -151,7 +166,7 @@ def render_html(config: dict[str, Any], services: dict[str, dict[str, Any]], che
         worst = max((c["resolved_status"] for c in items), key=lambda value: SEVERITY[value]); note = "All healthy" if worst == "ok" else f'{sum(c["resolved_status"] != "ok" for c in items)} need attention'
         category_html += f'<div class="category-row"><strong>{esc(category.title())}</strong><span>{len(items)} checks</span><span class="status-{worst}">{esc(note)}</span></div>'
     healthy = "".join(f'<span class="healthy-item">{esc(services[c["service_id"]]["name"])}</span>' for c in checks if c["resolved_status"] == "ok") or '<span class="muted">Healthy systems will appear here.</span>'
-    replacements = {"{{PAGE_TITLE}}":esc(config["report"]["title"]),"{{HEADER}}":header,"{{OVERVIEW}}":overview,"{{TREND}}":trend,"{{INCIDENTS}}":incident_html,"{{CHANGES}}":changes_html,"{{CATEGORIES}}":category_html,"{{HEALTHY}}":healthy,"{{SOURCE_NOTE}}":esc(config.get("source_note", "Generated locally from bundled example data."))}
+    replacements = {"{{PAGE_TITLE}}":esc(config["report"]["title"]),"{{HEADER}}":header,"{{OVERVIEW}}":overview,"{{TREND}}":trend,"{{INCIDENTS}}":incident_html,"{{FORECASTS}}":forecasts_html,"{{CHANGES}}":changes_html,"{{CATEGORIES}}":category_html,"{{HEALTHY}}":healthy,"{{SOURCE_NOTE}}":esc(config.get("source_note", "Generated locally from bundled example data."))}
     for key, value in replacements.items(): template = template.replace(key, value)
     return template
 
@@ -176,7 +191,7 @@ def main() -> int:
         generated_at = payload.get("generated_at", "timestamp not supplied")
         template = local_path("templates/report.html", "HTML template").read_text(encoding="utf-8")
         markdown = render_markdown(config, services, checks, generated_at)
-        history = load_json(local_path(config["inputs"]["history"], "history input")) if config["inputs"].get("history") else None
+        history = config.get("history") or (load_json(local_path(config["inputs"]["history"], "history input")) if config["inputs"].get("history") else None)
         html_report = render_html(config, services, checks, generated_at, template, history)
         md_path = local_path(config["outputs"]["markdown"], "Markdown output")
         html_path = local_path(config["outputs"]["html"], "HTML output")
