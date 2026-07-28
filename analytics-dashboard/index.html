@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Daily product-interest signals for Hearthsignal.">
+  <title>Hearthsignal Product Signal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Hearthsignal home">
+        <span class="mark" aria-hidden="true">◒</span>
+        <span>Hearthsignal</span>
+      </a>
+      <div class="title-block">
+        <strong>Product Signal</strong>
+        <span>Daily evidence of real-world interest</span>
+      </div>
+      <div class="status"><i></i> LIVE · DAILY</div>
+      <p class="updated" id="updated">Loading latest capture…</p>
+      <a class="repo-link" href="https://github.com/sc0528/hearthsignal">View on GitHub ↗</a>
+    </header>
+
+    <main>
+      <section class="metrics" aria-label="Current metrics">
+        <article><span>Unique visitors <b title="GitHub repository visitors in its rolling window">ⓘ</b></span><strong id="visitors">—</strong><small id="visitors-delta">Awaiting data</small></article>
+        <article><span>Repository views <b title="All repository page views in GitHub's rolling window">ⓘ</b></span><strong id="views">—</strong><small id="views-delta">Awaiting data</small></article>
+        <article><span>Unique cloners <b title="Unique users or systems that cloned the repository">ⓘ</b></span><strong id="cloners">—</strong><small id="cloners-delta">Awaiting data</small></article>
+        <article><span>Stars <b title="Current GitHub stars">ⓘ</b></span><strong id="stars">—</strong><small id="stars-delta">Awaiting data</small></article>
+      </section>
+
+      <section class="primary-grid">
+        <article class="panel chart-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">DISCOVERY</p><h1>Traffic over time</h1></div>
+            <div class="segmented" aria-label="Chart metric">
+              <button class="active" data-series="uniques">Visitors</button>
+              <button data-series="count">Views</button>
+            </div>
+          </div>
+          <div id="chart" class="chart" role="img" aria-label="Daily repository traffic chart"></div>
+          <p class="caption">Daily values from GitHub’s rolling 14-day traffic window.</p>
+        </article>
+
+        <article class="panel insight-panel">
+          <div class="panel-heading"><div><p class="eyebrow">INTERPRETATION</p><h2>What the signal says</h2></div><span class="pulse">⌁</span></div>
+          <div id="insights" class="insights"></div>
+        </article>
+      </section>
+
+      <section class="secondary-grid">
+        <article class="panel">
+          <p class="eyebrow">INTENT</p><h2>Engagement path</h2>
+          <div id="funnel" class="funnel"></div>
+          <p class="caption">Clones indicate trial intent, but CI systems and the owner’s own testing may contribute.</p>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">DISCOVERY</p><h2>Top content</h2>
+          <div class="table-wrap"><table><thead><tr><th>Path</th><th>Views</th><th>Unique</th></tr></thead><tbody id="paths"></tbody></table></div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">ACQUISITION</p><h2>Top referrers</h2>
+          <div class="table-wrap"><table><thead><tr><th>Source</th><th>Views</th><th>Unique</th></tr></thead><tbody id="referrers"></tbody></table></div>
+        </article>
+        <article class="panel data-quality">
+          <p class="eyebrow">TRUST</p><h2>Data quality</h2>
+          <div id="quality"></div>
+          <a href="https://docs.github.com/en/rest/metrics/traffic">GitHub traffic methodology ↗</a>
+        </article>
+      </section>
+    </main>
+
+    <footer><span>Hearthsignal · by Stuart Clarke</span><span>Updated once daily · Times shown in UTC</span></footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

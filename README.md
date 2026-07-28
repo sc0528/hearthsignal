@@ -4,6 +4,8 @@ A privacy-first daily operations briefing for people running a home lab.
 
 > **Home lab health, interpreted.**
 
+[**View Product Signal**](https://sc0528.github.io/hearthsignal/analytics-dashboard/) · [View the source](https://github.com/sc0528/hearthsignal)
+
 Hearthsignal tells you what is broken, what changed, why it matters, and what to do next—before you open six dashboards.
 
 ## See the briefing
