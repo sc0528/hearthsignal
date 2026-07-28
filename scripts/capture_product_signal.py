@@ -104,8 +104,17 @@ def main() -> int:
     if not args.token:
         parser.error("Provide ANALYTICS_TOKEN, GH_TOKEN, or --token")
 
-    snapshot = capture(args.repository, args.token)
     history = load_history(args.output)
+    snapshot = capture(args.repository, args.token)
+    if (
+        not snapshot["traffic"]["available"]
+        and any(item.get("traffic", {}).get("available") for item in history["snapshots"])
+    ):
+        print(
+            "Traffic access is unavailable; retaining the last complete snapshot.",
+            file=sys.stderr,
+        )
+        return 0
     snapshots = history["snapshots"]
 
     # Manual reruns replace the same UTC day's capture instead of inflating history.
