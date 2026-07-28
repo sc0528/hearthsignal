@@ -4,7 +4,7 @@
   "repository": "sc0528/hearthsignal",
   "snapshots": [
     {
-      "captured_at": "2026-07-28T14:19:03+00:00",
+      "captured_at": "2026-07-28T14:20:11+00:00",
       "repository": "sc0528/hearthsignal",
       "repository_metrics": {
         "stars": 0,
@@ -12,18 +12,166 @@
         "watchers": 0,
         "open_issues": 0,
         "size_kb": 238,
-        "pushed_at": "2026-07-28T14:18:20Z"
+        "pushed_at": "2026-07-28T14:19:05Z"
       },
       "traffic": {
-        "available": false,
+        "available": true,
         "window_days": 14,
-        "views": null,
-        "clones": null,
+        "views": {
+          "count": 0,
+          "uniques": 0,
+          "views": [
+            {
+              "timestamp": "2026-07-14T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-15T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-16T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-17T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-18T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-19T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-20T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-21T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-22T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-23T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-24T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-25T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-26T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-27T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            }
+          ]
+        },
+        "clones": {
+          "count": 5,
+          "uniques": 5,
+          "clones": [
+            {
+              "timestamp": "2026-07-14T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-15T00:00:00Z",
+              "count": 2,
+              "uniques": 2
+            },
+            {
+              "timestamp": "2026-07-16T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-17T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-07-18T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-07-19T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-07-20T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-21T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-22T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-23T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-24T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-25T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-26T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-07-27T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            }
+          ]
+        },
         "popular_paths": [],
         "referrers": [],
-        "errors": [
-          "GitHub returned HTTP 403"
-        ]
+        "errors": []
       }
     }
   ]
