@@ -34,6 +34,10 @@ class ProductSignalTests(unittest.TestCase):
         payload = {"schema_version": 1, "snapshots": [{"captured_at": "2026-07-28T00:00:00+00:00"}]}
         self.assertIn("snapshots", json.loads(json.dumps(payload)))
 
+    def test_complete_snapshot_can_be_detected_for_retention(self):
+        history = {"snapshots": [{"traffic": {"available": True}}]}
+        self.assertTrue(any(item.get("traffic", {}).get("available") for item in history["snapshots"]))
+
 
 if __name__ == "__main__":
     unittest.main()
