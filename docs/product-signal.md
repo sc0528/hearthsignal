@@ -1,11 +1,13 @@
 # Product Signal dashboard
 
-Hearthsignal publishes a daily, public evidence dashboard at:
+HearthSignal hosts the shared, daily Product Signal Portfolio at:
 
 `https://sc0528.github.io/hearthsignal/analytics-dashboard/`
 
-The dashboard is intended for product validation. It tracks GitHub repository
-discovery, trial intent, and sustained interest without collecting personal data.
+The product switch moves between HearthSignal and Viewloom without leaving the
+dashboard. Each repository continues to collect and publish its own snapshot data
+independently. The dashboard tracks repository discovery, trial intent, and
+sustained interest without collecting personal data.
 
 ## Schedule
 

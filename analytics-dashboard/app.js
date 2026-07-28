@@ -1,22 +1,43 @@
-const DATA_URL = "../analytics-data/snapshots.json";
+const PRODUCTS = {
+  hearthsignal: {
+    name: "HearthSignal",
+    repository: "sc0528/hearthsignal",
+    repoUrl: "https://github.com/sc0528/hearthsignal",
+    dataUrl: "../analytics-data/snapshots.json",
+    summary: "Daily evidence of discovery, trial intent, and sustained interest."
+  },
+  viewloom: {
+    name: "Viewloom",
+    repository: "sc0528/viewloom",
+    repoUrl: "https://github.com/sc0528/viewloom",
+    dataUrl: "https://sc0528.github.io/viewloom/analytics-data/snapshots.json",
+    summary: "Daily evidence of discovery, evaluation, and creator adoption."
+  }
+};
+
 const fmt = new Intl.NumberFormat("en-US");
 let latest;
 let previous;
 let activeSeries = "uniques";
+let activeProduct = "hearthsignal";
+let loadSequence = 0;
 
 const el = id => document.getElementById(id);
 const total = (group, key) => group && Number.isFinite(group[key]) ? group[key] : null;
 const traffic = snapshot => snapshot?.traffic?.available ? snapshot.traffic : null;
+const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, character => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+})[character]);
 
 function change(current, old) {
   if (current == null || old == null) return { text: "First recorded snapshot", cls: "neutral" };
   const delta = current - old;
   if (delta === 0) return { text: "No change since prior capture", cls: "neutral" };
-  return { text: `${delta > 0 ? "↑" : "↓"} ${fmt.format(Math.abs(delta))} since prior capture`, cls: delta < 0 ? "down" : "" };
+  return { text: `${delta > 0 ? "Up" : "Down"} ${fmt.format(Math.abs(delta))} since prior capture`, cls: delta < 0 ? "down" : "" };
 }
 
 function setMetric(id, value, prior) {
-  el(id).textContent = value == null ? "—" : fmt.format(value);
+  el(id).textContent = value == null ? "\u2014" : fmt.format(value);
   const delta = change(value, prior);
   const node = el(`${id}-delta`);
   node.textContent = delta.text;
@@ -52,7 +73,7 @@ function renderChart() {
 }
 
 function insight(icon, title, copy, confidence = "MEDIUM") {
-  return `<div class="insight"><span class="insight-icon">${icon}</span><div><strong>${title}</strong><p>${copy}</p></div><span class="confidence">${confidence}</span></div>`;
+  return `<div class="insight"><span class="insight-icon">${icon}</span><div><strong>${escapeHtml(title)}</strong><p>${escapeHtml(copy)}</p></div><span class="confidence">${confidence}</span></div>`;
 }
 
 function renderInsights() {
@@ -69,9 +90,9 @@ function renderInsights() {
   const conversion = visitors ? cloners / visitors * 100 : 0;
   const issues = latest.repository_metrics.open_issues;
   el("insights").innerHTML =
-    insight("↗", visitors ? `${fmt.format(visitors)} people found the repository.` : "Discovery is still at baseline.", direction, priorVisitors == null ? "BASELINE" : "MEDIUM") +
-    insight("⌁", `${fmt.format(cloners)} unique cloners show trial intent.`, `${conversion.toFixed(1)} unique clones per 100 unique visitors. Treat this as directional because automation can clone too.`, "MEDIUM") +
-    insight("★", `${fmt.format(stars)} stars and ${fmt.format(issues)} open issues.`, stars ? "Stars are the clearest public signal of sustained interest; issues may contain validation feedback." : "The strongest validation signal will be an unsolicited star or feedback issue.", "HIGH");
+    insight("+", visitors ? `${fmt.format(visitors)} people found the repository.` : "Discovery is still at baseline.", direction, priorVisitors == null ? "BASELINE" : "MEDIUM") +
+    insight("~", `${fmt.format(cloners)} unique cloners show trial intent.`, `${conversion.toFixed(1)} unique clones per 100 unique visitors. Treat this as directional because automation can clone too.`, "MEDIUM") +
+    insight("*", `${fmt.format(stars)} stars and ${fmt.format(issues)} open issues.`, stars ? "Stars are the clearest public signal of sustained interest; issues may contain validation feedback." : "The strongest validation signal will be an unsolicited star or feedback issue.", "HIGH");
 }
 
 function renderFunnel() {
@@ -82,22 +103,24 @@ function renderFunnel() {
   const steps = [["Visitors", visitors],["Cloners",cloners],["Stars",stars]];
   el("funnel").innerHTML = steps.map(([label,value], i) => {
     const rate = i && steps[i-1][1] ? `${(value / steps[i-1][1] * 100).toFixed(1)}% of prior step` : "rolling 14-day signal";
-    return `<div class="funnel-step"><div><span>${label}</span><strong>${value == null ? "—" : fmt.format(value)}</strong></div><span>${rate}</span></div>`;
+    return `<div class="funnel-step"><div><span>${label}</span><strong>${value == null ? "\u2014" : fmt.format(value)}</strong></div><span>${rate}</span></div>`;
   }).join("");
 }
 
 function renderTable(id, rows, labelKey) {
-  el(id).innerHTML = rows?.length ? rows.slice(0,6).map(row =>
-    `<tr><td title="${row[labelKey]}">${row[labelKey]}</td><td>${fmt.format(row.count)}</td><td>${fmt.format(row.uniques)}</td></tr>`
-  ).join("") : '<tr><td colspan="3" class="empty">No data available</td></tr>';
+  el(id).innerHTML = rows?.length ? rows.slice(0,6).map(row => {
+    const label = escapeHtml(row[labelKey]);
+    return `<tr><td title="${label}">${label}</td><td>${fmt.format(row.count)}</td><td>${fmt.format(row.uniques)}</td></tr>`;
+  }).join("") : '<tr><td colspan="3" class="empty">No data available</td></tr>';
 }
 
 function renderQuality() {
   const available = latest.traffic.available;
+  const errors = (latest.traffic.errors || []).map(escapeHtml).join(" / ");
   el("quality").innerHTML = `
-    <p class="quality-state ${available ? "" : "warning"}">${available ? "✓ Complete traffic capture" : "△ Public metrics only"}</p>
+    <p class="quality-state ${available ? "" : "warning"}">${available ? "Complete traffic capture" : "Public metrics only"}</p>
     <p>GitHub exposes repository traffic as a rolling 14-day window. A daily capture preserves a longer directional history without implying precision the source does not provide.</p>
-    <p>${available ? "Visitors and views are people-facing discovery signals. Clones can include CI, bots, and maintainer testing." : latest.traffic.errors.join(" · ") || "Traffic details were unavailable."}</p>`;
+    <p>${available ? "Visitors and views are people-facing discovery signals. Clones can include CI, bots, and maintainer testing." : errors || "Traffic details were unavailable."}</p>`;
 }
 
 function render(data) {
@@ -110,22 +133,86 @@ function render(data) {
   setMetric("views", total(t?.views,"count"), total(p?.views,"count"));
   setMetric("cloners", total(t?.clones,"uniques"), total(p?.clones,"uniques"));
   setMetric("stars", latest.repository_metrics.stars, previous?.repository_metrics?.stars);
-  el("updated").textContent = `Last captured ${new Date(latest.captured_at).toLocaleString("en-US",{dateStyle:"medium",timeStyle:"short",timeZone:"UTC"})} UTC`;
-  renderChart(); renderInsights(); renderFunnel();
+  el("updated").textContent = `Captured ${new Date(latest.captured_at).toLocaleString("en-US",{dateStyle:"medium",timeStyle:"short",timeZone:"UTC"})} UTC`;
+  renderChart();
+  renderInsights();
+  renderFunnel();
   renderTable("paths", t?.popular_paths, "path");
   renderTable("referrers", t?.referrers, "referrer");
   renderQuality();
 }
 
+function renderLoading() {
+  ["visitors", "views", "cloners", "stars"].forEach(id => {
+    el(id).textContent = "\u2014";
+    el(`${id}-delta`).textContent = "Loading data";
+    el(`${id}-delta`).className = "neutral";
+  });
+  el("chart").innerHTML = '<p class="empty">Loading traffic history...</p>';
+  el("insights").innerHTML = '<p class="empty">Preparing interpretation...</p>';
+  el("funnel").innerHTML = "";
+  renderTable("paths", [], "path");
+  renderTable("referrers", [], "referrer");
+  el("quality").innerHTML = '<p class="empty">Checking capture quality...</p>';
+}
+
+function renderError() {
+  renderLoading();
+  el("updated").textContent = "Capture temporarily unavailable";
+  el("chart").innerHTML = '<p class="empty">This product data could not be loaded. Please try again shortly.</p>';
+  el("insights").innerHTML = insight("!", "Signal temporarily unavailable", "The dashboard shell is healthy, but this product's latest snapshot could not be reached.", "HIGH");
+  el("quality").innerHTML = '<p class="quality-state warning">Snapshot unavailable</p><p>The other product remains available from the switch above.</p>';
+}
+
+async function loadProduct(key, updateUrl = true) {
+  const productKey = PRODUCTS[key] ? key : "hearthsignal";
+  const product = PRODUCTS[productKey];
+  const sequence = ++loadSequence;
+  activeProduct = productKey;
+  document.body.dataset.product = productKey;
+  document.title = `${product.name} / Product Signal`;
+  el("product-name").textContent = product.name;
+  el("product-summary").textContent = product.summary;
+  el("footer-product").textContent = product.name;
+  el("repo-link").href = product.repoUrl;
+  el("repo-link").setAttribute("aria-label", `Open ${product.repository} on GitHub`);
+  document.querySelectorAll("[data-product-select]").forEach(button => {
+    const selected = button.dataset.productSelect === productKey;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+  if (updateUrl) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("product", productKey);
+    history.replaceState({ product: productKey }, "", url);
+  }
+  renderLoading();
+  el("updated").textContent = `Loading ${product.name}...`;
+  try {
+    const response = await fetch(product.dataUrl, { cache: "no-store" });
+    if (!response.ok) throw new Error(response.statusText);
+    const data = await response.json();
+    if (sequence === loadSequence) render(data);
+  } catch {
+    if (sequence === loadSequence) renderError();
+  }
+}
+
 document.querySelectorAll("[data-series]").forEach(button => button.addEventListener("click", () => {
   document.querySelectorAll("[data-series]").forEach(item => item.classList.remove("active"));
-  button.classList.add("active"); activeSeries = button.dataset.series; renderChart();
+  button.classList.add("active");
+  activeSeries = button.dataset.series;
+  renderChart();
 }));
 
-fetch(DATA_URL, { cache: "no-store" })
-  .then(response => { if (!response.ok) throw new Error(response.statusText); return response.json(); })
-  .then(render)
-  .catch(() => {
-    document.querySelector("main").innerHTML = '<section class="panel"><h1>Product Signal is preparing its first capture.</h1><p class="caption">The daily workflow will publish data here after its first successful run.</p></section>';
-    el("updated").textContent = "No capture published yet";
-  });
+document.querySelectorAll("[data-product-select]").forEach(button => {
+  button.addEventListener("click", () => loadProduct(button.dataset.productSelect));
+});
+
+window.addEventListener("popstate", () => {
+  const requested = new URLSearchParams(window.location.search).get("product");
+  if (requested !== activeProduct) loadProduct(requested, false);
+});
+
+const requestedProduct = new URLSearchParams(window.location.search).get("product");
+loadProduct(requestedProduct, false);
