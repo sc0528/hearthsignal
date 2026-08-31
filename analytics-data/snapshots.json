@@ -4312,6 +4312,184 @@
         "referrers": [],
         "errors": []
       }
+    },
+    {
+      "captured_at": "2026-08-31T19:30:25+00:00",
+      "repository": "sc0528/hearthsignal",
+      "repository_metrics": {
+        "stars": 0,
+        "forks": 0,
+        "watchers": 0,
+        "open_issues": 0,
+        "size_kb": 294,
+        "pushed_at": "2026-08-30T17:30:08Z"
+      },
+      "traffic": {
+        "available": true,
+        "window_days": 14,
+        "views": {
+          "count": 2,
+          "uniques": 2,
+          "views": [
+            {
+              "timestamp": "2026-08-17T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-18T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-19T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-20T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-21T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-22T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-23T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-24T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-25T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-08-26T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-27T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-28T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-08-29T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-08-30T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            }
+          ]
+        },
+        "clones": {
+          "count": 56,
+          "uniques": 32,
+          "clones": [
+            {
+              "timestamp": "2026-08-17T00:00:00Z",
+              "count": 2,
+              "uniques": 2
+            },
+            {
+              "timestamp": "2026-08-18T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-08-19T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-08-20T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-08-21T00:00:00Z",
+              "count": 2,
+              "uniques": 2
+            },
+            {
+              "timestamp": "2026-08-22T00:00:00Z",
+              "count": 2,
+              "uniques": 2
+            },
+            {
+              "timestamp": "2026-08-23T00:00:00Z",
+              "count": 4,
+              "uniques": 4
+            },
+            {
+              "timestamp": "2026-08-24T00:00:00Z",
+              "count": 3,
+              "uniques": 3
+            },
+            {
+              "timestamp": "2026-08-25T00:00:00Z",
+              "count": 1,
+              "uniques": 1
+            },
+            {
+              "timestamp": "2026-08-26T00:00:00Z",
+              "count": 3,
+              "uniques": 3
+            },
+            {
+              "timestamp": "2026-08-27T00:00:00Z",
+              "count": 3,
+              "uniques": 3
+            },
+            {
+              "timestamp": "2026-08-28T00:00:00Z",
+              "count": 2,
+              "uniques": 2
+            },
+            {
+              "timestamp": "2026-08-29T00:00:00Z",
+              "count": 23,
+              "uniques": 14
+            },
+            {
+              "timestamp": "2026-08-30T00:00:00Z",
+              "count": 8,
+              "uniques": 8
+            }
+          ]
+        },
+        "popular_paths": [
+          {
+            "path": "/sc0528/hearthsignal",
+            "title": "Overview",
+            "count": 2,
+            "uniques": 2
+          }
+        ],
+        "referrers": [],
+        "errors": []
+      }
     }
   ]
 }
