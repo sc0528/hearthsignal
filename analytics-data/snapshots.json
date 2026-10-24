@@ -13884,6 +13884,177 @@
         "referrers": [],
         "errors": []
       }
+    },
+    {
+      "captured_at": "2026-10-24T16:35:19+00:00",
+      "repository": "sc0528/hearthsignal",
+      "repository_metrics": {
+        "stars": 0,
+        "forks": 0,
+        "watchers": 0,
+        "open_issues": 0,
+        "size_kb": 328,
+        "pushed_at": "2026-10-23T17:52:31Z"
+      },
+      "traffic": {
+        "available": true,
+        "window_days": 14,
+        "views": {
+          "count": 0,
+          "uniques": 0,
+          "views": [
+            {
+              "timestamp": "2026-10-10T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-11T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-12T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-13T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-14T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-15T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-16T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-17T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-18T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-19T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-20T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-21T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-22T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            },
+            {
+              "timestamp": "2026-10-23T00:00:00Z",
+              "count": 0,
+              "uniques": 0
+            }
+          ]
+        },
+        "clones": {
+          "count": 167,
+          "uniques": 71,
+          "clones": [
+            {
+              "timestamp": "2026-10-10T00:00:00Z",
+              "count": 18,
+              "uniques": 12
+            },
+            {
+              "timestamp": "2026-10-11T00:00:00Z",
+              "count": 22,
+              "uniques": 12
+            },
+            {
+              "timestamp": "2026-10-12T00:00:00Z",
+              "count": 14,
+              "uniques": 7
+            },
+            {
+              "timestamp": "2026-10-13T00:00:00Z",
+              "count": 5,
+              "uniques": 3
+            },
+            {
+              "timestamp": "2026-10-14T00:00:00Z",
+              "count": 16,
+              "uniques": 8
+            },
+            {
+              "timestamp": "2026-10-15T00:00:00Z",
+              "count": 16,
+              "uniques": 8
+            },
+            {
+              "timestamp": "2026-10-16T00:00:00Z",
+              "count": 6,
+              "uniques": 4
+            },
+            {
+              "timestamp": "2026-10-17T00:00:00Z",
+              "count": 5,
+              "uniques": 3
+            },
+            {
+              "timestamp": "2026-10-18T00:00:00Z",
+              "count": 6,
+              "uniques": 4
+            },
+            {
+              "timestamp": "2026-10-19T00:00:00Z",
+              "count": 38,
+              "uniques": 15
+            },
+            {
+              "timestamp": "2026-10-20T00:00:00Z",
+              "count": 6,
+              "uniques": 4
+            },
+            {
+              "timestamp": "2026-10-21T00:00:00Z",
+              "count": 6,
+              "uniques": 4
+            },
+            {
+              "timestamp": "2026-10-22T00:00:00Z",
+              "count": 4,
+              "uniques": 2
+            },
+            {
+              "timestamp": "2026-10-23T00:00:00Z",
+              "count": 5,
+              "uniques": 3
+            }
+          ]
+        },
+        "popular_paths": [],
+        "referrers": [],
+        "errors": []
+      }
     }
   ]
 }
